@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class Appcontroller extends Controller
 {
@@ -51,16 +52,41 @@ class Appcontroller extends Controller
 
         $pdf_path=$value['$path'];
         $url = env('SAGE_API_V3').$pdf_path;
-        var_dump($url);
+
+        $this->dowloadPDF_file($url,$parsed_res['access_token']);
+
+        die();
 
        }
 
-        die();
+
 
     }
 
     public function parseJSON($res){
         $res= json_decode(json_encode(json_decode($res)),true);
         return $res;
+    }
+
+    public function dowloadPDF_file($url,$token){
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Accept: application/pdf',
+                'Authorization: Bearer ' . $token
+            ));
+
+
+            $pdf = curl_exec($ch);
+
+            $month = date('m');
+            $year = date("Y");
+
+            Storage::disk('local')->put('invoices/'.$month.'-'.$year.'/example.pdf', $pdf);
+
+            //for debug only!
+            $info = curl_getinfo($ch);
+            var_dump($info);
+
     }
 }
