@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Services\InvoiceProccesator;
 
 class Appcontroller extends Controller
 {
     /**
      * Handle the incoming request.
      */
+
     public function __invoke(Request $request)
     {
         //
@@ -24,9 +26,14 @@ class Appcontroller extends Controller
         return view('welcome', ['code' => $code]);
     }
 
-    public function process(Request $request)
+    public function process(InvoiceProccesator $invoiceService)
     {
 
+        dd($invoiceService);
+
+        die();
+
+        /*
         $code = $request->input('code');
         $data = [
             'client_id' =>env('SAGE_CLIENT_ID'),
@@ -56,12 +63,16 @@ class Appcontroller extends Controller
         $this->dowloadPDF_file($url,$parsed_res['access_token']);
 
         die();
-
        }
 
-
+        */
 
     }
+
+    public function test(){
+
+    }
+
 
     public function parseJSON($res){
         $res= json_decode(json_encode(json_decode($res)),true);
