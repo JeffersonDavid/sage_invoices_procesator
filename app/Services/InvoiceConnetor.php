@@ -32,16 +32,11 @@ class InvoiceConnetor
     }
 
     private function getToken(){
-
         $response = Http::withBody(json_encode($this->getPayload()), 'application/json')->withOptions(
         ['Content-Type' => 'application/x-www-form-urlencoded',])->post(env('SAGE_ACOOUNT').'/token');
-
         $parsed_res =$this->parseJSON($response->body());
-
-        logger()->info(json_encode($parsed_res));
-
+       // logger()->info(json_encode($parsed_res));
         $this->token = $parsed_res['access_token'];
-
         $this->refresh_token = $parsed_res['refresh_token'];
 
     }

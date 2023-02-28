@@ -19,11 +19,14 @@ class Invoice extends Model
         'invoice_api_name',
         'invoice_download_url',
         'send_staus',
+        'invoice_date',
         'shipment_date',
         'creation_date',
+        'invoice_local_path',
         'updated_date',
         'token_call',
-        'refresh_token_call'
+        'refresh_token_call',
+        'send_status'
     ];
 
 

@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('process_logs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('id');
+            $table->string('payload');
+            $table->timestamp('updated_date')->useCurrent();
+            $table->timestamp('creation_date')->useCurrent();
         });
     }
 

@@ -17,14 +17,15 @@ return new class extends Migration
             $table->string('invoice_number');
             $table->string('invoice_name');
             $table->string('invoice_api_name');
+            $table->string('invoice_local_path');
             $table->string('invoice_download_url');
             $table->date('invoice_date');
             $table->integer('send_status');
             $table->date('shipment_date');
-            $table->timestamp('update_date')->useCurrent();
+            $table->timestamp('updated_date')->useCurrent();
             $table->timestamp('creation_date')->useCurrent();
-            $table->string('token_call');
-            $table->string('refresh_token_call');
+            $table->longText('token_call');
+            $table->longText('refresh_token_call');
         });
     }
 
