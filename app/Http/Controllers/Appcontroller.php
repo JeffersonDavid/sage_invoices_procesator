@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessInvoices;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use App\Services\InvoiceProccesator;
+use App\Services\InvoiceConnetor;
+use Illuminate\Support\Facades\Artisan;
 
 class Appcontroller extends Controller
 {
@@ -26,12 +29,13 @@ class Appcontroller extends Controller
         return view('welcome', ['code' => $code]);
     }
 
-    public function process(InvoiceProccesator $invoiceService)
+    public function process(InvoiceConnetor $invoiceService)
     {
 
-        dd($invoiceService);
-
-        die();
+        //logger()->info(json_encode($invoiceService));
+        ProcessInvoices::dispatch($invoiceService);
+        //Artisan::command('php artisan queue:work --queue=high,default');
+        return view('welcome');
 
         /*
         $code = $request->input('code');
@@ -69,15 +73,6 @@ class Appcontroller extends Controller
 
     }
 
-    public function test(){
-
-    }
-
-
-    public function parseJSON($res){
-        $res= json_decode(json_encode(json_decode($res)),true);
-        return $res;
-    }
 
     public function dowloadPDF_file($url,$token){
             $ch = curl_init($url);

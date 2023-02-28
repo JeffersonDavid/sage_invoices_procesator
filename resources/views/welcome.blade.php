@@ -22,8 +22,7 @@
     </head>
 
     <body>
-
-
+        @php isset($code) ? $code : $code = null @endphp
 
         @if($code==null)
 

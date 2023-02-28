@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\InvoiceConnetor;
 use App\Services\InvoiceProccesator;
 use App\Services\SageConnector;
 use GuzzleHttp\Psr7\Request;
@@ -15,8 +16,8 @@ class InvoiceServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        $this->app->bind(InvoiceProccesator::class, function ($app) {
-            return new InvoiceProccesator();
+        $this->app->bind(InvoiceConnetor::class, function ($app) {
+            return new InvoiceConnetor();
         });
 
     }
