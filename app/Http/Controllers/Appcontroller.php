@@ -37,40 +37,6 @@ class Appcontroller extends Controller
         //Artisan::command('php artisan queue:work --queue=high,default');
         return view('welcome');
 
-        /*
-        $code = $request->input('code');
-        $data = [
-            'client_id' =>env('SAGE_CLIENT_ID'),
-            'client_secret' => env('SAGE_CLIENT_SECRET'),
-            'code' => $code,
-            'grant_type' => 'authorization_code',
-            'redirect_uri'=>env('SAGE_REDIRECT_URI')
-        ];
-
-        $response = Http::withBody(json_encode($data), 'application/json')
-        ->withOptions([
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->post(env('SAGE_ACOOUNT').'/token');
-
-        $parsed_res =$this->parseJSON($response->body());
-
-        $sales_invoices = Http::withToken($parsed_res['access_token'])
-        ->get(env('SAGE_API_V3').'/sales_invoices');
-
-        $sales_invoices = $this->parseJSON($sales_invoices->body());
-
-       foreach ($sales_invoices['$items'] as $key => $value) {
-
-        $pdf_path=$value['$path'];
-        $url = env('SAGE_API_V3').$pdf_path;
-
-        $this->dowloadPDF_file($url,$parsed_res['access_token']);
-
-        die();
-       }
-
-        */
-
     }
 
 

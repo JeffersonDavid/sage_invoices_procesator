@@ -62,10 +62,12 @@ class ProcessInvoices implements ShouldQueue
     public function proccesPayloadLog(){
         $pages_container=[];
         $default_page = 0;
+
         while ($this->invoices['$next']){
             $default_page ++;
             array_push($pages_container,$default_page);
         }
+
         $this->payload_to_proccess = [
             'pages_to_process'=>count($pages_container),
             'from_date'=> $this->invoiceService->params['from_date'],
