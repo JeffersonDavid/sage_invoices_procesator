@@ -22,30 +22,25 @@
     </head>
 
     <body>
-        @php isset($code) ? $code : $code = null @endphp
+
+        @php
+
+        $code= isset($code) ? $code : $code = null;
+
+
+
+        @endphp
 
         @if($code==null)
-
             <div style="padding:50px">
                 <a class="btn btn-primary" href="https://www.sageone.com/oauth2/auth/central?filter=apiv3.1&response_type=code&client_id=32653905-2064-4cfd-b1ba-d4472b6881b1/d33b217c-7df5-4586-914c-cebfe4cf22cc&redirect_uri=http://127.0.0.1:8000&scope=full_access&state=random_string">ACCEDER A LA APLICACIÓN</a>
             <div>
         @else
 
-        <div class="container">
-            <form method="POST" action="/process?code={{$code}}&country=ES&state=random_string">
-              @csrf
-                <div style="margin: 50px">
-                    <div class="form-group">
-                    <label for="from_date">Desde</label>
-                    <input type="date" id="from_date" name="from_date">
-                    <label for="to_date">Hasta</label>
-                    <input type="date" id="to_date" name="to_date">
-                    <button type="submit" class="btn btn-primary" style="margin-left:5%">Procesar y enviar facturas a gestoria</button>
-                    </div>
-            </div>
+        <div class="d-flex flex-wrap">
+                <x-options :code="$code" class="flex-grow-0 flex-shrink-0 flex-basis-2"/>
+        </div>
 
-        </form>
-        <div>
 
         @endif
 
