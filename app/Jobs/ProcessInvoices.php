@@ -39,25 +39,30 @@ class ProcessInvoices implements ShouldQueue
      */
     public function handle(): void
     {
-        logger()->info('********* token ****************');
+        logger()->info('Ejcutando cola de trabajo');
+
         logger()->info(json_encode($this->invoiceService->token));
         //1
         $this->invoices = $this->fetchInvoices();
         //2
         $this->processInoviceData();
 
-
         $m = Mail::to('jeffersondvid@hotmail.com')->send(new Notificator($this->payload_to_proccess));
 
-        logger()->info(json_encode($m));
 
         logger()->info('************ proceso finalizado ********* ');
     }
 
 
     public function fetchInvoices( $pageNum = 1 ){
+
+
         $from_date = $this->invoiceService->params['from_date'];
         $to_date = $this->invoiceService->params['to_date'];
+
+        logger()->info('from_date '. $from_date);
+        logger()->info('to_date' .$to_date);
+
         $sales_invoices = Http::withToken($this->invoiceService->token)
         ->get(env('SAGE_API_V3').'/sales_invoices?from_date='.$from_date.'&to_date='.$to_date.'&items_per_page=200&page='. $pageNum );
         return $this->invoiceService->parseJSON($sales_invoices->body());
@@ -94,8 +99,7 @@ class ProcessInvoices implements ShouldQueue
 
                 $url = env('SAGE_API_V3') . $value['$path'];
 
-                $invoice_request = Http::withToken($this->invoiceService->token)
-                ->get($url);
+                $invoice_request = Http::withToken($this->invoiceService->token)->get($url);
 
                 $invoice_data =  $this->invoiceService->parseJSON($invoice_request->body());
 

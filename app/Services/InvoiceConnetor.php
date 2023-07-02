@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class InvoiceConnetor
 {
@@ -15,31 +16,56 @@ class InvoiceConnetor
     public $code;
     public $grant_type;
     public $params;
+    public $valid;
+    public $type;
 
 
 
 
-    public function __construct()
+    public function __construct($code, $from_date, $to_date, $type)
     {
-        $this->code = request()->input('code');
+
+        $this->valid = true;
+        $this->code = $code;
         $this->grant_type='authorization_code';
-        $this->getToken();
         $this->params = [
-            'from_date'=> request()->input('from_date'),
-            'to_date'=> request()->input('to_date')
+            'from_date'=> $from_date,
+            'to_date'=> $to_date
         ];
 
+
+        logger()->info(json_encode($this->params));
+
+
+        $this->getToken();
+
+        $this->type = $type;
     }
 
     private function getToken(){
+
+        logger()->info('Intentando obtener el token');
+        logger()->info(json_encode($this->getPayload()));
+
         $response = Http::withBody(json_encode($this->getPayload()), 'application/json')->withOptions(
         ['Content-Type' => 'application/x-www-form-urlencoded',])->post(env('SAGE_ACOOUNT').'/token');
         $parsed_res =$this->parseJSON($response->body());
-       // logger()->info(json_encode($parsed_res));
+
+        if(!isset($parsed_res['access_token'])){
+            session(['failed_request' => $this->params]);
+            logger()->info(' redirecciona porque el code ha caducado');
+            $this->valid = false;
+            return $this;
+
+        }
+
+        logger()->info('token obtenido correctamente');
+        Session::flush();
+
         $this->token = $parsed_res['access_token'];
         $this->refresh_token = $parsed_res['refresh_token'];
-
     }
+
 
     private function getPayload(){
         return [

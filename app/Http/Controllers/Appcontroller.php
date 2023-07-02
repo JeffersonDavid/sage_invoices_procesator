@@ -26,16 +26,33 @@ class Appcontroller extends Controller
         //
         $input = $request->all();
         $code = isset($input['code']) ? $input['code'] : null;
+
         return view('welcome', ['code' => $code]);
     }
 
-    public function process(InvoiceConnetor $invoiceService)
+    public function process(Request $request)
     {
+        $inputs = $request->all();
 
-        //logger()->info(json_encode($invoiceService));
-        ProcessInvoices::dispatch($invoiceService);
-        //Artisan::command('php artisan queue:work --queue=high,default');
-        return view('welcome');
+        if($inputs['type']='year_month'){
+
+            $year = $inputs['year'];
+            $month = $inputs['month'];
+            // Obtener el primer día del mes
+            $inputs['from_date'] = date('Y-m-d', strtotime("{$year}-{$month}-01"));
+            // Obtener el último día del mes
+            $inputs['to_date'] = date('Y-m-d', strtotime("{$year}-{$month}-" . date('t', strtotime("{$year}-{$month}-01"))));
+        }
+
+
+        $invoiceService = new InvoiceConnetor($inputs['code'], $inputs['from_date'], $inputs['to_date'], $inputs['type']);
+
+        if($invoiceService->valid){
+            ProcessInvoices::dispatch($invoiceService);
+            return view('welcome',['success'=> 'Facturas enviadas correctamente, recibira un correo electronico cuando el proceso haya terminado']);
+        }
+
+        return redirect('http://127.0.0.1:8000?sessionerror=true&from_date='.$inputs['from_date'].'&to_date='.$inputs['to_date'].'&type='.$inputs['type']);
 
     }
 
@@ -58,7 +75,6 @@ class Appcontroller extends Controller
 
             //for debug only!
             $info = curl_getinfo($ch);
-            var_dump($info);
 
     }
 }

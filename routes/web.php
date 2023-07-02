@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [Appcontroller::class, 'index']);
-Route::post('/process', [Appcontroller::class, 'process']);
+Route::get('/', [Appcontroller::class, 'index'])->name('home');
+
+Route::match(['get', 'post'], '/process', [AppController::class, 'process'])->name('process');
