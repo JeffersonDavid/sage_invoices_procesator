@@ -39,6 +39,7 @@ return [
             'table' => 'jobs',
             'queue' => 'default',
             'retry_after' => 90,
+            'timeout' => 9000,
             'after_commit' => false,
         ],
 

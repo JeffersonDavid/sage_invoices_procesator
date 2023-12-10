@@ -28,6 +28,7 @@ class ProcessInvoices implements ShouldQueue
      */
     public $invoices;
     public $payload_to_proccess;
+    public $timeout = 5000;
 
     public function __construct(public InvoiceConnetor $invoiceService)
     {
